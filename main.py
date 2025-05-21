@@ -28,7 +28,7 @@ def ask_stream():
         system_message = {
             "role": "system",
             "content": "You are an AI assistant that helps people find information from provided document sources within <sources></sources> tags. "
-                       "Provide concise, accurate responses based only on the information in the sources. Choose only the information relevant to the asked question "
+                       "Provide concise, accurate responses based only on the information in the sources sorted by relevance. Choose only the information relevant to the asked question "
                        "If the information is not in the sources, acknowledge that you don't have the answer. "
                        "If asked follow-up questions, maintain context from the conversation."
         }
@@ -95,7 +95,7 @@ def ask():
             {"role": "system",
              "content": "You are an AI assistant that helps people find information for "
                         "the question in <question></question> tags from provided "
-                        "document sources within <sources></sources> tags."
+                        "document sources within <sources></sources> tags that are sorted by relevance."
                         "Provide concise, accurate responses based only on the "
                         "information in the sources. Choose only relevant information to the question from the sources."
                         "If the information is not in the sources, acknowledge that you "
