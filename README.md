@@ -61,7 +61,7 @@ if you plan on using the app locally with your GPU support
 
 ## 🛠️ Configuration
 
-Copy and update the `.env` file (or set environment variables directly):
+### Set these environment variables:
 
 ```bash
 # Azure OpenAI settings
@@ -82,9 +82,13 @@ DOCS_DIR=<your-docs-path>
 
 The application will automatically pick up these environment variables via `config.py`.
 
+### Set up the reranker
+If you intend to improve performance via a reranker model 
+and not use the local implementation, 
+edit the code as explained in `config.py`, based on which reranker you use
 
+### Run this for local use via LM Studio
 ```bash
-  # Run this for local use via LM Studio
   LOCAL=True
 ```
 ---
