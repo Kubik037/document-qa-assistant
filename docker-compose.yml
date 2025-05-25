@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"    # Flask API
+      - "8501:8501"    # Streamlit UI
+    volumes:
+      - chromadb_data:/app/data
+      - docs_volume:/app/docs
+      - ./docs:/app/docs  # Mount local docs directory if it exists
+    environment:
+      - PYTHONPATH=/app
+      - FLASK_APP=main.py
+      - CHROMA_DB_PATH=/app/data/chroma
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/source_retrieval", "-X", "POST", "-H", "Content-Type: application/json", "-d", '{"question":"test"}']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  chromadb_data:
+    driver: local
+  docs_volume:
+    driver: local

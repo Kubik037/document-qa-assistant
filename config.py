@@ -55,44 +55,45 @@ api_version_emb = os.getenv("API_VERSION_EMB", "")
 subscription_key = os.getenv("AZURE_OPENAI_API_KEY", "")
 local = os.getenv("LOCAL", False)
 
-# Initialize Azure OpenAI Service client
-azure_client = openai.AzureOpenAI(
-    azure_endpoint=endpoint,
-    api_key=subscription_key,
-    api_version=api_version,
-    azure_deployment=deployment
-)
+if not local:
+    # Initialize Azure OpenAI Service client
+    azure_client = openai.AzureOpenAI(
+        azure_endpoint=endpoint,
+        api_key=subscription_key,
+        api_version=api_version,
+        azure_deployment=deployment
+    )
 
-# Initialize Azure OpenAI Service client with model compatible with RAGAS
-eval_client = langchain_openai.AzureOpenAI(
-    azure_endpoint=endpoint,
-    api_key=subscription_key,
-    api_version=api_version,
-    azure_deployment=deployment,
-    temperature=0.2,
-    top_p=0.95,
-    max_tokens=800
-)
+    # Initialize Azure OpenAI Service client with model compatible with RAGAS
+    eval_client = langchain_openai.AzureOpenAI(
+        azure_endpoint=endpoint,
+        api_key=subscription_key,
+        api_version=api_version,
+        azure_deployment=deployment,
+        temperature=0.2,
+        top_p=0.95,
+        max_tokens=800
+    )
 
-azure_embeddings = langchain_openai.AzureOpenAIEmbeddings(
-    api_version="2024-02-01",
-    azure_endpoint=endpoint,
-    azure_deployment=deployment_emb,
-    api_key=subscription_key
-)
+    azure_embeddings = langchain_openai.AzureOpenAIEmbeddings(
+        api_version="2024-02-01",
+        azure_endpoint=endpoint,
+        azure_deployment=deployment_emb,
+        api_key=subscription_key
+    )
+else:
+    local_client = openai.OpenAI(
+        base_url=f"{MODEL_URL}/v1",
+        api_key=None,
+    )
 
-local_client = openai.OpenAI(
-    base_url=f"{MODEL_URL}/v1",
-    api_key=None,
-)
-
-local_embeddings = langchain_openai.OpenAIEmbeddings(
-    base_url=f"{MODEL_URL}/v1",
-    api_key=None,
-    check_embedding_ctx_length=False,
-    model=EMBED_MODEL,
-    dimensions=chunk_size
-)
+    local_embeddings = langchain_openai.OpenAIEmbeddings(
+        base_url=f"{MODEL_URL}/v1",
+        api_key=None,
+        check_embedding_ctx_length=False,
+        model=EMBED_MODEL,
+        dimensions=chunk_size
+    )
 
 if local:
     reranker = FlagReranker(

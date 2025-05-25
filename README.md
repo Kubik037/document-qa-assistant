@@ -15,6 +15,7 @@ A **Document QA Assistant** is a Streamlit-based web application backed by a Fla
 
   * Azure OpenAI resource (endpoint & key)
 * **LM Studio** running locally (for local usage)
+* **Docker** & **Docker Compose** (for containerized deployment)
 
 ---
 
@@ -22,36 +23,36 @@ A **Document QA Assistant** is a Streamlit-based web application backed by a Fla
 
 ### 1. Clone the repository:
 
-   ```bash
-       git clone https://github.com/your-org/document-qa-assistant.git
-       cd document-qa-assistant
-   ```
+```
+  git clone https://github.com/your-org/document-qa-assistant.git
+  cd document-qa-assistant
+```
 
 ### 2. Create and activate a virtual environment:
 
 Windows:
-   ```bash
-       python -m venv .venv
-       .\.venv\\Scripts\\activate
-   ```
+```
+  python -m venv .venv
+  .\.venv\\Scripts\\activate
+```
 Mac/Linux:
-   ```bash
-       python -m venv .venv
-       source .venv/bin/activate
-   ```
+```
+  python -m venv .venv
+  source .venv/bin/activate
+```
 
 ### 3. Install Python dependencies:
 
-   ```bash
-       pip install --upgrade pip
-       pip install -r requirements.txt
-   ```
+```
+  pip install --upgrade pip
+  pip install -r requirements.txt
+```
 
 ### (_Optional_) 4. Reinstall torch for local use
 Uninstall torch 
-```bash
-       pip uninstall torch
-   ```
+```
+  pip uninstall torch
+```
 and install it via instructions in 
 this link for your hardware
 https://pytorch.org/get-started/locally/ 
@@ -63,21 +64,21 @@ if you plan on using the app locally with your GPU support
 
 ### Set these environment variables:
 
-```bash
-# Azure OpenAI settings
-ENDPOINT_URL=https://<your-resource>.cognitiveservices.azure.com/
-DEPLOYMENT_NAME=<your-deployment>
-API_VERSION=<your-version>
-AZURE_OPENAI_API_KEY=<your-key>
-DEPLOYMENT_EMB=<your-deployment>
-API_VERSION_EMB=<your-version>
-
-# Local LM Studio settings
-MODEL_URL=http://localhost:1234
-MODEL_NAME=<your-preffered-local-model>
-
-# Your document directory for retrieval (absolute or relative)
-DOCS_DIR=<your-docs-path>
+```
+  # Azure OpenAI settings
+  ENDPOINT_URL=https://<your-resource>.cognitiveservices.azure.com/
+  DEPLOYMENT_NAME=<your-deployment>
+  API_VERSION=<your-version>
+  AZURE_OPENAI_API_KEY=<your-key>
+  DEPLOYMENT_EMB=<your-deployment>
+  API_VERSION_EMB=<your-version>
+  
+  # Local LM Studio settings
+  MODEL_URL=http://localhost:1234
+  MODEL_NAME=<your-preffered-local-model>
+  
+  # Your document directory for retrieval (absolute or relative)
+  DOCS_DIR=<your-docs-path>
 ```
 
 The application will automatically pick up these environment variables via `config.py`.
@@ -88,7 +89,7 @@ and not use the local implementation,
 edit the code as explained in `config.py`, based on which reranker you use
 
 ### Run this for local use via LM Studio
-```bash
+```
   LOCAL=True
 ```
 ---
@@ -97,15 +98,15 @@ edit the code as explained in `config.py`, based on which reranker you use
 
 ### 1. **Generate embeddings** (only needed on first run or when documents change):
 
-   ```bash
-      python main.py  # Embeddings will be created and stored in ./chroma_db
-   ```
+```
+  python main.py  # Embeddings will be created and stored in ./chroma_db
+```
 
 ### 2. **Start the Streamlit UI**:
 
-   ```bash
-      streamlit run query_ui.py
-   ```
+```
+  streamlit run query_ui.py
+```
 
 ### 3. Open your browser at `http://localhost:8501` to interact with the Document QA Assistant.
 
@@ -138,6 +139,35 @@ If Azure OpenAI is unavailable, or if you prefer a local inference engine, confi
 ├── config.py          # Configuration & client initialization
 ├── tests.py           # Testing file for RAGAS evaluation on your dataset
 ├── requirements.txt   # Python dependencies
+├── Dockerfile         # Docker container configuration
+├── docker-compose.yml # Docker orchestration
+├── .dockerignore      # Docker build exclusions
 └── docs/              # Your markdown documents for QA
+```
+
+## 🐳 Docker Deployment
+For production deployment or easy setup, you can use Docker to containerize the entire application with persistent ChromaDB storage.
+#### Prerequisites
+
+- Docker installed on your system 
+- Docker Compose installed
+
+### Quick Start with Docker
+
+**Ensure your project structure includes the Docker files 
+and that you have sett the environment variables as described above.**
+
+Build and start the application:
+```
+  docker-compose up --build
+  # Use -d flag to run in detached mode (background):
+  docker-compose up --build -d
+```
+
+Access your application:
+
+```
+  Streamlit UI: http://localhost:8501
+  Flask API: http://localhost:5000
 ```
 ---
